@@ -3,8 +3,8 @@ import { createBot } from './bot/createBot';
 import { loadEnv } from './config/env';
 
 export async function startApp(): Promise<void> {
-  const { botToken } = loadEnv();
-  const bot = createBot(botToken);
+  const { botToken, adminId } = loadEnv();
+  const bot = createBot(botToken, adminId);
 
   await bot.launch();
 

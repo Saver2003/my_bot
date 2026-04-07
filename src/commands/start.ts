@@ -55,6 +55,13 @@ async function beginBooking(ctx: Context): Promise<void> {
 
   draftsByUserId.set(ctx.from.id, { step: 'name' });
 
+  const controls =
+    ctx.from.id === adminId
+      ? Markup.inlineKeyboard([
+          [Markup.button.callback('🛑 Остановить бота', 'admin:stop_bot')],
+        ])
+      : undefined;
+
   await ctx.replyWithHTML(
     '✨ <b>Онлайн-запись в салон</b>\n\n' +
       'Доступные услуги:\n' +
@@ -62,11 +69,16 @@ async function beginBooking(ctx: Context): Promise<void> {
       '• Бритье\n' +
       '• Маникюр\n' +
       '• Массаж\n\n' +
-      '👤 Напишите ваше имя:'
+      '👤 Напишите ваше имя:',
+    controls
   );
 }
 
-export function registerStartCommand(bot: Telegraf): void {
+let adminId: number | undefined;
+
+export function registerStartCommand(bot: Telegraf, configuredAdminId?: number): void {
+  adminId = configuredAdminId;
+
   bot.start(async (ctx) => {
     await beginBooking(ctx);
   });
@@ -82,6 +94,19 @@ export function registerStartCommand(bot: Telegraf): void {
 
     draftsByUserId.delete(ctx.from.id);
     await ctx.replyWithHTML('❌ Запись отменена. Для новой записи используйте /book');
+  });
+
+  bot.action('admin:stop_bot', async (ctx) => {
+    if (!ctx.from || !adminId || ctx.from.id !== adminId) {
+      await ctx.answerCbQuery('Недостаточно прав');
+      return;
+    }
+
+    await ctx.answerCbQuery('Останавливаю...');
+    await ctx.replyWithHTML('🛑 <b>Бот остановлен администратором.</b>');
+
+    bot.stop('ADMIN_STOP');
+    setTimeout(() => process.exit(0), 200);
   });
 
   bot.action(/^service:(haircut|shave|manicure|massage)$/, async (ctx) => {
