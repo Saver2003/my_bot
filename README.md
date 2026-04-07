@@ -6,6 +6,7 @@ Telegram bot on Telegraf with TypeScript support.
 
 - /start or /book - starts salon booking flow
 - /cancel - cancels current booking flow
+- Admin sees button "Остановить бота" when ADMIN_ID is configured
 - Bot asks: name, service, and booking date (DD.MM.YYYY)
 - Services: Стрижка, Бритье, Маникюр, Массаж
 
@@ -18,6 +19,7 @@ npm install
 2. Create environment file:
 
 Copy .env.example to .env and set BOT_TOKEN.
+Set ADMIN_ID to your Telegram numeric user id if you want the stop button.
 
 3. Run in development mode:
 
