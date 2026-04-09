@@ -21,6 +21,13 @@ export function advancedKeyboard(): ReturnType<typeof Markup.inlineKeyboard> {
   ]);
 }
 
+export function demoKeyboard(): ReturnType<typeof Markup.inlineKeyboard> {
+  return Markup.inlineKeyboard([
+    [Markup.button.callback('💰 Узнать цену', 'get_price')],
+    [Markup.button.callback('🔙 Назад', 'how_it_works')],
+  ]);
+}
+
 export function startKeyboard(): ReturnType<typeof Markup.inlineKeyboard> {
   return Markup.inlineKeyboard([
     [Markup.button.callback('🚀 Посмотреть шаблон', 'view_template')],

@@ -1,5 +1,7 @@
+import path from 'path';
+import { createReadStream } from 'fs';
 import { Scenes, Telegraf } from 'telegraf';
-import { startKeyboard, segmentKeyboard, beginnerKeyboard, advancedKeyboard } from '../utils/keyboards';
+import { startKeyboard, segmentKeyboard, beginnerKeyboard, advancedKeyboard, demoKeyboard } from '../utils/keyboards';
 
 export function registerStartHandler(bot: Telegraf<Scenes.WizardContext>): void {
   bot.start(async (ctx) => {
@@ -18,7 +20,27 @@ export function registerStartHandler(bot: Telegraf<Scenes.WizardContext>): void 
 
   bot.action('view_template', async (ctx) => {
     await ctx.answerCbQuery();
-    await ctx.replyWithHTML('🚀 <b>Шаблон</b>\n\nСсылка на шаблон: <i>скоро будет доступна</i>');
+
+    const assetsDir = path.join(process.cwd(), 'assets');
+    await ctx.replyWithMediaGroup([
+      { type: 'photo', media: { source: createReadStream(path.join(assetsDir, 'notion_2.png')) } },
+      { type: 'photo', media: { source: createReadStream(path.join(assetsDir, 'notion_3.png')) } },
+    ]);
+
+    await ctx.replyWithHTML(
+      '🖼 <b>Вот как выглядит шаблон изнутри</b>\n\n' +
+        '😤 <b>Теряешь задачи</b> → здесь всё в одном месте\n' +
+        '🌀 <b>Нет системы</b> → есть готовая структура\n' +
+        '😵 <b>Забываешь о целях</b> → трекер напомнит и покажет прогресс\n' +
+        '⏳ <b>Тратишь время на настройку</b> → всё уже собрано за тебя\n\n' +
+        '<b>Что получаешь:</b>\n' +
+        '✅ Единое пространство для задач, проектов и целей\n' +
+        '✅ Трекер привычек и планировщик недели\n' +
+        '✅ Готовые фильтры и связи между базами\n' +
+        '✅ Быстрый старт без настройки\n\n' +
+        '👇 Хочешь узнать стоимость?',
+      demoKeyboard(),
+    );
   });
 
   bot.action('how_it_works', async (ctx) => {
