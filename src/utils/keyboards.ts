@@ -34,3 +34,10 @@ export function startKeyboard(): ReturnType<typeof Markup.inlineKeyboard> {
     [Markup.button.callback('❓ Как это работает', 'how_it_works')],
   ]);
 }
+
+export function offerKeyboard(): ReturnType<typeof Markup.inlineKeyboard> {
+  return Markup.inlineKeyboard([
+    [Markup.button.callback('💳 Купить', 'buy')],
+    [Markup.button.callback('❓ Задать вопрос', 'ask_question')],
+  ]);
+}
